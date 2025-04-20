@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>사용자 정보 입력 웹폼</title>
+  <script>
+    function submitForm(event) {
+      event.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const number = document.getElementById("number-input").value;
+      const gender = document.getElementById("gender").value;
+      const jobElements = document.querySelectorAll('input[name="job"]:checked');
+      const job = Array.from(jobElements).map(el => el.value).join(", ");
+      const message = document.getElementById("message").value;
+
+      fetch("https://script.google.com/macros/s/AKfycby4W8v1mY9egcIBFtOwQhp7BLYy9zb9ihNmDOewoo7TYxFq-RwUxpe0BAEXxEub0tPP/exec", {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: `name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&number=${encodeURIComponent(number)}&gender=${encodeURIComponent(gender)}&job=${encodeURIComponent(job)}&message=${encodeURIComponent(message)}`
+      }).then(() => {
+        alert("성공!");
+      }).catch(error => {
+        alert("전송 실패: " + error.message);
+      });
+    }
+  </script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="form-container">
+    <h2>당신의 정보를 알려주세요!</h2>
+    <form onsubmit="submitForm(event)">
+      <label for="name">이름이 어떻게 되시나요?</label>
+      <input type="text" id="name" name="name" required placeholder="김영아" />
+
+      <label for="email">이메일이 어떻게 되시나요?</label>
+      <input type="email" id="email" name="email" required placeholder="example@domain.com" />
+
+      <label for="number-input">숫자를 입력하세요:</label>
+      <input list="number-options" id="number-input" name="number" required placeholder="1" />
+      <datalist id="number-options">
+        <option value="10"></option>
+        <option value="20"></option>
+      </datalist>
+
+      <label for="gender">성별이 어떻게 되시나요?</label>
+      <select id="gender" name="gender" required>
+        <option value="">성별을 선택하세요</option>
+        <option value="male">남성</option>
+        <option value="female">여성</option>
+        <option value="other">기타</option>
+      </select>
+
+      <label for="job">직업이 어떻게 되시나요?</label>
+      <div class="checkbox-container">
+        <div class="checkbox-row">
+          <span class="label-text">학생</span>
+          <input type="checkbox" name="job" value="student" />
+        </div>
+        <div class="checkbox-row">
+          <span class="label-text">교수</span>
+          <input type="checkbox" name="job" value="professor" />
+        </div>
+        <div class="checkbox-row">
+          <span class="label-text">기타</span>
+          <input type="checkbox" name="job" value="etc" />
+        </div>
+      </div>
+
+      <label for="message">입력하고 싶은 말을 입력해주세요!</label>
+      <textarea id="message" name="message" rows="4" placeholder="자기소개를 입력하세요"></textarea>
+
+      <label for="last">모든 입력을 마치셨나요?</label>
+      <div class="radio-container">
+        <div class="radio-row">
+          <label for="yes">O</label>
+          <input type="radio" id="yes" name="question" value="yes" />
+        </div>
+        <div class="radio-row">
+          <label for="no">X</label>
+          <input type="radio" id="no" name="question" value="no" />
+        </div>
+      </div>
+
+      <button type="submit">제출</button>
+    </form>
+  </div>
+</body>
+</html>
